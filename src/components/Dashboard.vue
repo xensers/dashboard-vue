@@ -58,45 +58,37 @@ export default {
           description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
           isDrag: false,
           isHover: false
-        },
-        {
-          id: 3,
-          title: 'title 3',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
-          isDrag: false,
-          isHover: false
-        },
-        {
-          id: 4,
-          title: 'title 4',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
-          isDrag: false,
-          isHover: false
-        },
-        {
-          id: 5,
-          title: 'title 5',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
-          isDrag: false,
-          isHover: false
-        },
-        {
-          id: 6,
-          title: 'title 6',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
-          isDrag: false,
-          isHover: false
-        },
+        }
       ]
     }
   },
+  watch: {
+    cards(cards) {
+      const cleanCards = cards.map(card => ({
+          id: card.id,
+          title: card.title,
+          description: card.description,
+      }));
+      localStorage.setItem('cards', JSON.stringify(cleanCards))
+    }
+  },
+  created() {
+    const savedCards = localStorage.getItem('cards')
+    if (savedCards) {
+      this.cards = JSON.parse(savedCards).map(card => ({
+        ...card,
+        isDrag: false,
+        isHover: false
+      }))
+    }
+  },
   methods: {
-    dragStart(e, index, card) {
-      const cardElem = e.target.closest('.dashboard__card')
+    dragStart(event, index, card) {
+      const cardElem = event.target.closest('.dashboard__card')
       const outerElem = cardElem.querySelector('.dashboard__card-inner')
       const innerElem = cardElem.querySelector('.dashboard__card-inner')
       const box = innerElem.getBoundingClientRect()
-      const { offsetX, offsetY } = e
+      const { offsetX, offsetY } = event
 
       this.moved = true
       card.isDrag = true
@@ -114,16 +106,15 @@ export default {
         innerElem.style.left = e.clientX - offsetX + 'px'
       }
 
-      moveListener(e);
-      document.addEventListener('mousemove', moveListener)
-
-      document.onmouseup = () => {
+      const dragEnd = () => {
         const hoverCardIndex = this.cards.findIndex(({ isHover }) => isHover === true)
-        const cards = this.cards.slice()
-        const movedCard = cards[hoverCardIndex];
-        cards[hoverCardIndex] = cards[index];
-        cards[index] = movedCard;
-        this.cards = cards;
+        if (hoverCardIndex > -1) {
+          const cards = this.cards.slice()
+          const movedCard = cards[hoverCardIndex];
+          cards[hoverCardIndex] = cards[index];
+          cards[index] = movedCard;
+          this.cards = cards;
+        }
 
         card.isDrag = false
         this.moved = false
@@ -132,9 +123,12 @@ export default {
         innerElem.removeAttribute('style')
 
         document.removeEventListener('mousemove', moveListener)
+        document.removeEventListener('mouseup', dragEnd)
       }
 
-      console.log(index, cardElem, box)
+      moveListener(event);
+      document.addEventListener('mousemove', moveListener)
+      document.addEventListener('mouseup', dragEnd)
     }
   }
 }
