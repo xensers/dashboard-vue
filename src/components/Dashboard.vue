@@ -1,15 +1,14 @@
 <template>
   <div class="dashboard">
-    <div class="dashboard__controls">
-      <router-link to="/add-card">Добавить</router-link>
-      <span class="separator"></span>
-      <label>
-        <input type="checkbox" />
-        <span>drag&drop</span>
-      </label>
-      <span class="separator"></span>
-    </div>
-    <transition-group name="list-complete" tag="div" class="dashboard__cards" ref="cards">
+    <section class="dashboard__controls">
+      <div class="nav">
+        <router-link to="/add-card" class="btn btn--blue">Добавить</router-link>
+        <span class="separator"></span>
+        <checkbox v-model="dragEnabled">Drag & Drop</checkbox>
+        <span class="separator"></span>
+      </div>
+    </section>
+    <transition-group name="list-complete" tag="section" class="dashboard__cards" ref="cards">
       <div
         v-for="(card, index) in cards"
         :key="card.id"
@@ -39,10 +38,13 @@
 
 <script>
 
+import Checkbox from "@/components/checkbox";
 export default {
   name: "dashboard",
+  components: {Checkbox},
   data() {
     return {
+      dragEnabled: true,
       moved: false,
       cards: this.$store.getters.cards.map(card => ({
         ...card,
@@ -63,6 +65,8 @@ export default {
   },
   methods: {
     dragStart(event, index, card) {
+      if (!this.dragEnabled) return;
+
       const cardElem = event.target.closest('.dashboard__card')
       const outerElem = cardElem.querySelector('.dashboard__card-inner')
       const innerElem = cardElem.querySelector('.dashboard__card-inner')
@@ -115,16 +119,6 @@ export default {
 
 <style lang="scss">
 .dashboard {
-  &__controls, &__body {
-    margin: 1rem 0;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid;
-  }
-
-  &__controls {
-    padding: 0;
-  }
-
   &__cards {
     display: flex;
     flex-wrap: wrap;
@@ -177,21 +171,11 @@ export default {
   height: 100%;
   min-height: 10rem;
   padding: 1rem;
-  border: 1px solid;
+  border: 1px solid #ccc;
 
   &__title {
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
-}
-
-.separator {
-  display: inline-block;
-  margin: 0 0.5rem;
-  width: 1px;
-  height: 100%;
-  min-height: 3em;
-  vertical-align: middle;
-  background: black;
 }
 </style>
