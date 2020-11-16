@@ -1,22 +1,15 @@
 <template>
   <div id="app">
-    <Dashboard />
+    <router-view/>
   </div>
 </template>
 
-<script>
-import Dashboard from './components/Dashboard'
-
-export default {
-  name: 'App',
-  components: {
-    Dashboard
-  },
-}
-</script>
-
-<style>
+<style lang="scss">
 #app {
   padding: 2rem;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
 }
 </style>

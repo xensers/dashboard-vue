@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <div class="dashboard__controls">
-      <button>Добавить</button>
+      <router-link to="/add-card">Добавить</router-link>
       <span class="separator"></span>
       <label>
         <input type="checkbox" />
