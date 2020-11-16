@@ -9,11 +9,11 @@
       </label>
       <span class="separator"></span>
     </div>
-    <div class="dashboard__cards" ref="cards">
+    <transition-group name="list-complete" tag="div" class="dashboard__cards" ref="cards">
       <div
         v-for="(card, index) in cards"
         :key="card.id"
-        class="dashboard__card"
+        class="dashboard__card list-complete-item"
         :class="{
           'dashboard__card--drag': card.isDrag,
           'dashboard__card--hover': card.isHover,
@@ -33,7 +33,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 
@@ -82,7 +82,7 @@ export default {
         },
         {
           id: 6,
-          title: 'title 5',
+          title: 'title 6',
           description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
           isDrag: false,
           isHover: false
@@ -117,14 +117,13 @@ export default {
       moveListener(e);
       document.addEventListener('mousemove', moveListener)
 
-      this.$refs.cards.onmouseup = () => {
+      document.onmouseup = () => {
         const hoverCardIndex = this.cards.findIndex(({ isHover }) => isHover === true)
-
-        const mass = this.cards.slice()
-        const temp1 = mass[hoverCardIndex];
-        mass[hoverCardIndex] = mass[index];
-        mass[index] = temp1;
-        this.cards = mass;
+        const cards = this.cards.slice()
+        const movedCard = cards[hoverCardIndex];
+        cards[hoverCardIndex] = cards[index];
+        cards[index] = movedCard;
+        this.cards = cards;
 
         card.isDrag = false
         this.moved = false
@@ -166,16 +165,11 @@ export default {
     flex-basis: 1 / 4 * 100%;
     cursor: pointer;
     user-select: none;
-    background: #fff;
-
-    &--moved &-outer {
-      opacity: 0.5;
-      background: #eee;
-    }
 
     &-outer {
       position: relative;
       height: 100%;
+      background: #fff;
 
       &:after {
         content: '';
@@ -190,12 +184,17 @@ export default {
       }
     }
 
+    &--moved &-outer {
+      background: #eee;
+    }
+
     &--drag &-outer {
       border: 1px dashed;
     }
 
     &--drag &-inner {
-      opacity: 0.5;
+      opacity: 0.8;
+      background: #fff;
     }
   }
 }
