@@ -44,22 +44,11 @@ export default {
   data() {
     return {
       moved: false,
-      cards: [
-        {
-          id: 1,
-          title: 'title 1',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
-          isDrag: false,
-          isHover: false
-        },
-        {
-          id: 2,
-          title: 'title 2',
-          description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
-          isDrag: false,
-          isHover: false
-        }
-      ]
+      cards: this.$store.getters.cards.map(card => ({
+        ...card,
+        isDrag: false,
+        isHover: false
+      }))
     }
   },
   watch: {
@@ -69,17 +58,7 @@ export default {
           title: card.title,
           description: card.description,
       }));
-      localStorage.setItem('cards', JSON.stringify(cleanCards))
-    }
-  },
-  created() {
-    const savedCards = localStorage.getItem('cards')
-    if (savedCards) {
-      this.cards = JSON.parse(savedCards).map(card => ({
-        ...card,
-        isDrag: false,
-        isHover: false
-      }))
+      this.$store.dispatch('setCards', cleanCards)
     }
   },
   methods: {
