@@ -6,7 +6,23 @@
       </div>
     </section>
     <section>
-      <h1>Add card page</h1>
+      <h3>Добавить карточку</h3>
+      <CardForm @submit="submit"/>
     </section>
   </div>
 </template>
+<script>
+import CardForm from "@/components/CardForm";
+
+export default {
+  components: { CardForm },
+  methods: {
+    submit(card) {
+      this.$store.dispatch('addCard', card);
+      this.$router.push({
+        path: '/'
+      })
+    }
+  }
+}
+</script>

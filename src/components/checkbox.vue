@@ -31,7 +31,12 @@
 <script>
 export default {
   name: "Checkbox",
-  props: ["value"],
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    }
+  },
 };
 </script>
 

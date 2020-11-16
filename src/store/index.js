@@ -9,12 +9,12 @@ export default new Vuex.Store({
   state: {
     cards: savedCards || [
       {
-        id: 1,
+        id: 0,
         title: 'title 1',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
       },
       {
-        id: 2,
+        id: 1,
         title: 'title 2',
         description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, asperiores aspernatur beatae blanditiis corporis cumque dicta dignissimos dolores eos expedita',
       }
@@ -22,13 +22,23 @@ export default new Vuex.Store({
   },
   mutations: {
     setCards(state, cards) {
-      this.cards = cards
+      state.cards = cards
+    },
+    addCard(state, card) {
+      state.cards.push(card)
     }
   },
   actions: {
-    setCards({ commit }, cards) {
+    setCards({ commit, dispatch }, cards) {
       commit('setCards', cards)
-      localStorage.setItem('cards', JSON.stringify(cards))
+      dispatch('saveCards')
+    },
+    addCard({ commit, dispatch }, card) {
+      commit('addCard', card)
+      dispatch('saveCards')
+    },
+    saveCards({ state }) {
+      localStorage.setItem('cards', JSON.stringify(state.cards))
     }
   },
   getters: {
