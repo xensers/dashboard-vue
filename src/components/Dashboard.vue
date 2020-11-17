@@ -1,5 +1,10 @@
 <template>
-  <div class="dashboard">
+  <div
+    class="dashboard"
+    :class="{
+      'dashboard--drag-enabled' : dragEnabled
+    }"
+  >
     <section class="dashboard__controls">
       <div class="nav">
         <router-link to="/add-card" class="btn btn--blue">Добавить</router-link>
@@ -28,6 +33,16 @@
             <div class="card">
               <div class="card__title">{{ card.title }}</div>
               <div class="card__description">{{ card.description }}</div>
+              <div class="card__controls">
+                <router-link
+                  class="btn btn--blue btn--small"
+                  :to="{
+                    name: 'EditCard',
+                    params: { id: card.id }
+                  }"
+                >Изменить</router-link>
+                <button class="btn btn--small" @click="deleteCardById(card.id)">Удалить</button>
+              </div>
             </div>
           </div>
         </div>
@@ -37,8 +52,8 @@
 </template>
 
 <script>
-
 import Checkbox from "@/components/checkbox";
+
 export default {
   name: "dashboard",
   components: {Checkbox},
@@ -65,7 +80,7 @@ export default {
   },
   methods: {
     dragStart(event, index, card) {
-      if (!this.dragEnabled) return;
+      if (!this.dragEnabled || !!event.target.closest('.card__controls')) return;
 
       const cardElem = event.target.closest('.dashboard__card')
       const outerElem = cardElem.querySelector('.dashboard__card-inner')
@@ -112,6 +127,10 @@ export default {
       moveListener(event);
       document.addEventListener('mousemove', moveListener)
       document.addEventListener('mouseup', dragEnd)
+    },
+    deleteCardById(id) {
+      const index = this.cards.findIndex(card => card.id === id)
+      this.cards.splice(index, 1)
     }
   }
 }
@@ -119,6 +138,8 @@ export default {
 
 <style lang="scss">
 .dashboard {
+  $self: &;
+
   &__cards {
     display: flex;
     flex-wrap: wrap;
@@ -130,14 +151,19 @@ export default {
     margin: 0.5rem 0;
     padding: 1rem 0.5rem;
     flex-basis: 1 / 4 * 100%;
-    cursor: pointer;
     user-select: none;
 
-    &-outer {
+    #{$self}--drag-enabled & {
+      cursor: pointer;
+    }
+
+    &-outer, &-inner {
       position: relative;
       height: 100%;
-      background: #fff;
+    }
 
+    &-outer {
+      background: #fff;
       &:after {
         content: '';
         display: block;
@@ -146,7 +172,6 @@ export default {
         left: 0;
         width: 100%;
         height: 100%;
-        background: red;
         opacity: 0;
       }
     }
@@ -168,6 +193,11 @@ export default {
 
 .card {
   position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
   height: 100%;
   min-height: 10rem;
   padding: 1rem;
@@ -176,6 +206,21 @@ export default {
   &__title {
     font-weight: bold;
     margin-bottom: 0.5rem;
+  }
+
+  &__description {
+    margin-bottom: 0.5rem;
+  }
+
+  &__controls {
+    position: relative;
+    z-index: 1;
+    justify-self: flex-end;
+
+    margin-top: auto;
+    padding-top: 0.5rem;
+
+    border-top: 1px solid #ccc;
   }
 }
 </style>

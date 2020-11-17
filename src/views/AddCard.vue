@@ -20,7 +20,7 @@ export default {
     submit(card) {
       this.$store.dispatch('addCard', card);
       this.$router.push({
-        path: '/'
+        name: 'Home'
       })
     }
   }

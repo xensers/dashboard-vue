@@ -20,17 +20,30 @@
 <script>
 export default {
   name: "CardForm",
+  props: {
+    card: {
+      type: Object,
+      default: null
+    }
+  },
   data() {
     return {
-      id: this.$store.getters.cards.length,
+      id: this.$store.getters.cards.length + 1,
       title: '',
       description: ''
+    }
+  },
+  created() {
+    if (this.card) {
+      const { id, title, description } = this.card
+      if (id) this.id = id
+      if (title) this.title = title
+      if (description) this.description = description
     }
   },
   methods: {
     submit() {
       const { id, title, description } = this;
-      console.log(id, title, description)
       if (!!title && !!description) {
         this.$emit('submit', { id, title, description })
       }

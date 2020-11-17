@@ -13,6 +13,11 @@ const routes = [
     path: '/add-card',
     name: 'AddCard',
     component: () => import('@/views/AddCard.vue')
+  },
+  {
+    path: '/edit-card/:id',
+    name: 'EditCard',
+    component: () => import('@/views/EditCard.vue')
   }
 ]
 

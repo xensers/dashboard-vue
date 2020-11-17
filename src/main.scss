@@ -55,8 +55,8 @@ input, textarea {
   align-items: center;
   vertical-align: middle;
 
+  margin: 0 0.3rem;
   padding: 1.2em 1.5em;
-  height: 4em;
 
   font-style: normal;
   font-weight: 500;
@@ -71,8 +71,6 @@ input, textarea {
   border: none;
   border-radius: 0.25em;
 
-  margin: 0 0.3rem;
-
   cursor: pointer;
   user-select: none;
 
@@ -83,22 +81,19 @@ input, textarea {
     margin-right: 0;
   }
 
-  &,
-  &:before {
+  &, &:before {
     background: #edeff8;
     color: #2E51AA;
     transition-property: background, box-shadow;
     transition-duration: 0.5s;
   }
 
-  &,
-  &:hover {
+  &, &:hover {
     color: #2E51AA;
   }
 
   &:hover {
-    &,
-    &:before {
+    &, &:before {
       background: #DBE1F0;
     }
   }
@@ -112,6 +107,11 @@ input, textarea {
   .icon {
     font-size: 1.15em;
     fill: #2E51AA;
+  }
+
+  &--small {
+    padding: 0.4em;
+    text-transform: inherit;
   }
 
   &--blue {
@@ -139,20 +139,17 @@ input, textarea {
   }
 
   &--dark {
-    &,
-    &:hover {
+    &, &:hover {
       color: #FFF;
     }
 
-    &,
-    &:before {
+    &, &:before {
       background: #323347;
       color: #FFF;
     }
 
     &:hover {
-      &,
-      &:before {
+      &, &:before {
         background: #454657;
       }
     }
@@ -172,8 +169,7 @@ input, textarea {
     padding-left: 1.35em;
     text-transform: none;
 
-    &,
-    &:hover {
+    &, &:hover {
       background: transparent;
       box-shadow: none;
     }
